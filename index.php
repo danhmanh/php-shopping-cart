@@ -1,6 +1,13 @@
 <?php
     include 'dbconfig.php' ;
     include 'header.php' ;
+    session_start() ;
+
+    if(isset($_GET['truncate'])){
+        $preState = $PDO->prepare("TRUNCATE carts")  ;
+        $preState->execute() ;
+        header("Location: index.php") ;
+    }
 ?>
 
 
@@ -24,7 +31,7 @@
 
 
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a href="#" class="dropdown-toggle" data-toggle="dropdown" id = "cart"><span class="glyphicon glyphicon-shopping-cart"></span>Cart <span class="badge">0</span></a>
+                    <li><a href="#" class="dropdown-toggle" data-toggle="dropdown" id = "cart"><span class="glyphicon glyphicon-shopping-cart"></span>Cart <span class="badge" id  = "cart_count"></span></a>
                         <div class="dropdown-menu" style="width:400px;">
                             <div class="panel panel-success">
                                 <div class="panel-heading">
@@ -36,10 +43,14 @@
                                         <div class="col-md-3">Price in $.</div>
                                     </div>
 
-<!--                                    CART STATUS-->
+
+                                    <!--                                    CART STATUS-->
                                     <div id = "cart_status">
 
 
+                                    </div>
+                                    <div class="row">
+                                        <a class="btn btn-danger" id = "truncate" href="index.php?truncate=1">Truncate (DEVELOPER)</a>
                                     </div>
                                 </div>
                                 <div class="panel-body"></div>
@@ -47,6 +58,7 @@
                             </div>
                         </div>
                     </li>
+                    <li><a href="checkout.php">Checkout</a></li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">24x7 Support <b class="caret"></b></a>
                         <ul class="dropdown-menu">

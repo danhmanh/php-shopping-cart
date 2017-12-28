@@ -2,7 +2,18 @@ $(document).ready(function() {
     product() ;
     category() ;
     brand() ;
+    getCartCount() ;
 
+    function getCartCount() {
+        $.ajax({
+            url: "action.php" ,
+            method: "POST" ,
+            data : {getCartCount:1} ,
+            success : function(data) {
+                $("#cart_count").html(data) ;
+            }
+        })
+    }
 
     // GET ALL PRODUCT
   function product() {
@@ -39,7 +50,7 @@ $(document).ready(function() {
       })
   }
 
-  //CLICK TO BUY
+  //ADD PRODUCT TO CART
     $("body").delegate(".product" , "click" , function (event) {
         event.preventDefault() ;
         var pid = $(this).attr("pid") ;
@@ -52,12 +63,17 @@ $(document).ready(function() {
                 // alert(data) ;
                 // swal(data);
                 $("#cart_status").html(data) ;
-                swal("Success !", data, "success");
+                swal("Success !", data, "success") ;
+                getCartCount() ;
 
             }
         }) ;
+
+
+
     }) ;
 
+    //GET SELECTED CATEGORY
     $("body").delegate(".category" , "click", function (event) {
         event.preventDefault() ;
         var cid = $(this).attr("cid") ;
@@ -70,8 +86,9 @@ $(document).ready(function() {
 
             }
         }) ;
-    })
+    }) ;
 
+    //GET SELECTED BRAND
     $("body").delegate(".brand" , "click", function (event) {
         event.preventDefault() ;
         var bid = $(this).attr("bid") ;
@@ -86,6 +103,7 @@ $(document).ready(function() {
         }) ;
     }) ;
 
+    //SORT
     $("body").delegate(".sort" , "click" , function (event) {
        event.preventDefault() ;
        var sid = $(this).attr("id") ;
@@ -102,6 +120,7 @@ $(document).ready(function() {
 
     });
 
+    //GET CART STATUS
     $("body").delegate("#cart" , "click", function (event) {
         event.preventDefault() ;
         // swal("Hello") ;
@@ -116,12 +135,67 @@ $(document).ready(function() {
         }) ;
     }) ;
 
-    $("body").delegate(".detail" , "click" , function (event) {
-        var pid = $(this).attr("pid") ;
-
+    //ADJUST QUANTITY
+    $("body").delegate(".quantity" , "keyup" , function (event) {
+        // swal("Hello") ;
+       var pid = $(this).attr("pid") ;
+       var quantity = $("#quantity-" + pid).val() ;
+       var price = $("#price-" + pid).val() ;
+       var total = quantity * price ;
+       $("#total-" + pid).val(quantity * price) ;
+        $.ajax({
+            url: "action.php" ,
+            method: "POST" ,
+            data: {updateQuantity : 1 , pid: pid , quantity: quantity , total: total },
+            success: function (data) {
+                sumTotal() ;
+            }
+        }) ;
+       // total();
 
 
 
     });
+    total() ;
+    function total() {
+        var pid = 1 ;
+        var total = 0   ;
+        for(pid = 1 ; pid < 100 ; pid = pid + 1){
+            if($("#total-" + pid).val() != null){
+                total += parseFloat($("#total-" + pid).val()) ;
+            }
+        }
+        $(".total").html(total + " đ") ;
+
+    }
+
+    function sumTotal() {
+        $.ajax({
+            url: "action.php" ,
+            method: "POST" ,
+            data: {sumTotal : 1},
+            success: function (data) {
+                $(".total").html(data + " đ") ;
+
+            }
+        }) ;
+    }
+
+    function checkSendable() {
+        var total = $("#total").text() ;
+        if(total === "0 đ"){
+
+            console.log(total) ;
+            $("#info").addClass("disabledbutton") ;
+        } else {
+            $("#info").removeClass("disabledbutton") ;
+        }
+    }
+    checkSendable() ;
+
+
+
+
+
 
 });

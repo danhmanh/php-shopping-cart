@@ -26,7 +26,8 @@
     <!-- custom CSS here -->
     <link href="assets/css/style.css" rel="stylesheet" />
 
-    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<!--    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>-->
+    <script src="assets/js/sweetalert.js"></script>
 
     <script src="assets/js/jquery-1.11.1.js"></script>
 

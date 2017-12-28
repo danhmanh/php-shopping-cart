@@ -7,13 +7,14 @@
  */
 
 include 'dbconfig.php' ;
+session_start() ;
 if(isset($_POST["getProducts"])){
     $preState = $PDO->prepare("SELECT * FROM products") ; 
     $preState->execute() ;
 
 
-
     $no = 0 ;
+    $_SESSION["count"] = $no ;
     while ($row = $preState->fetch()){
 
         $id = $row["product_id"] ;
@@ -40,7 +41,7 @@ if(isset($_POST["getProducts"])){
                                 
                                 <a href='#' class='btn btn-success product' role='button'  pid = $id >
                                 Add To Cart</a>
-                                <a href='#' class='btn btn-primary detail'  role='button' pid = $id>See Details</a>
+                                <a href='detailproduct.php?pid=$id' class='btn btn-primary detail'  role='button' pid = $id>See Details</a>
                             </div>    
                   </div>
                             
@@ -163,15 +164,6 @@ if(isset($_POST["addProductToCart"])) {
         $preState->execute() ;
 
         echo "Product is added" ;
-//        echo "
-//        <div class='row'>
-//                                        <div class='col-md-3'>1</div>
-//                                        <div class='col-md-3'><img src='assets/img/$image' class='img-responsive'></div>
-//                                        <div class='col-md-3'>$title</div>
-//                                        <div class='col-md-3'>$price</div>
-//                                    </div>
-//
-//        " ;
     }
 
 }
@@ -225,7 +217,7 @@ if(isset($_POST["getSelectedCategory"]) || isset($_POST["getSelectedBrand"]) || 
                                 
                                 <a href='#' class='btn btn-success product' role='button'  pid = $id >
                                 Add To Cart</a>
-                                <a href='#' class='btn btn-primary' role='button'>See Details</a>
+                                <a href='detailproduct.php?pid=$id' class='btn btn-primary detail'  role='button' pid = $id>See Details</a>
                             </div>
                         </div>
                     </div>
@@ -253,13 +245,44 @@ if(isset($_POST["getCartStatus"])) {
 
         echo "
             <div class='row'>
-                                        <div class='col-md-3'>$no</div>
-                                        <div class='col-md-3'><img src='assets/img/$image' class='img-responsive'></div>
-                                        <div class='col-md-3'>$title</div>
-                                        <div class='col-md-3'>$price</div>
-                                    </div>
+                <div class='col-md-3'>$no</div>
+                <div class='col-md-3'><img src='assets/img/$image' class='img-responsive'></div>
+                <div class='col-md-3'>$title</div>
+                <div class='col-md-3'>$price</div>
+            </div>
         
         ";
         $no = $no + 1 ;
     }
+}
+
+if(isset($_POST["getCartCount"])){
+    $preState = $PDO->prepare("SELECT count(*) FROM carts ") ;
+    $preState->execute() ;
+    $row = $preState->fetch() ;
+    echo $row["count(*)"] ;
+}
+
+if(isset($_POST["updateQuantity"])){
+    $quantity = $_POST["quantity"] ;
+    $total = $_POST['total'] ;
+    $pid = $_POST['pid'] ;
+
+    $preState = $PDO->prepare("UPDATE `carts` SET quantity = $quantity , total = $total WHERE product_id = $pid") ;
+    $preState->execute() ;
+}
+
+if(isset($_POST["sumTotal"])){
+    $preState = $PDO->prepare("SELECT * FROM carts") ;
+    $preState->execute() ;
+    $total = 0 ;
+    while($row = $preState->fetch()){
+//        $quantity  = $row['quantity'];
+//        $price = $row['price'] ;
+//        echo $row['total'] . "<br>";
+        $total = $total +  $row['total'] ;
+
+    }
+
+    echo  $total ;
 }

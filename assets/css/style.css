@@ -101,6 +101,11 @@ color: #000;
     text-decoration:none;
 }
 
+/*.panel {*/
+    /*height: 519px;*/
+    /*width: 272px;*/
+/*}*/
+
 .offer-box {
 background-color: #6A75F0;
 border: 1px solid #096FC0;
@@ -205,3 +210,9 @@ background-color:#EB0429;
      background-color:#000;
      font-size:14px;
 }
+
+.disabledbutton {
+    pointer-events: none;
+    opacity: 0.4;
+}
+

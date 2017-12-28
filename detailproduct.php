@@ -10,6 +10,24 @@
 <?php
 include 'dbconfig.php' ;
 include 'header.php' ;
+if(isset($_GET['pid'])){
+    $pid = $_GET['pid'] ;
+    $preState  = $PDO->prepare("SELECT * FROM products WHERE product_id= '$pid'") ;
+    $preState->execute() ;
+    $row = $preState->fetch() ;
+        $image = $row["product_image"] ;
+        $price = $row['product_price'] ;
+        $title = $row['product_title'] ;
+        $description  = $row['product_description'] ;
+    $preStateBrand = $PDO->prepare("SELECT brand_title FROM brands , products WHERE brands.brand_id = products.brand_id AND  product_id = $pid") ;
+    $preStateBrand->execute() ;
+    $rowB = $preStateBrand->fetch() ;
+        $brand = $rowB['brand_title'] ;
+
+}
+
+?>
+
 ?>
 
 
@@ -23,7 +41,7 @@ include 'header.php' ;
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#"><strong>Just Monika</strong> Shop</a>
+            <a class="navbar-brand" href="index.php"><strong>Just Monika</strong> Shop</a>
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
@@ -77,31 +95,28 @@ include 'header.php' ;
 <br><br><br><br>
 <div class="container">
     <div class="row">
+
+
         <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-            <img src="https://vn-live-03.slatic.net/p/7/giay-sneakers-nam-converse-all-star-131841c-outlet-mau-den-1512293437-98279532-d1cc032039cacd11432ac7c190db57fb-webp-zoom_850x850.jpg" class="img-responsive">
+            <img src="assets/img/<?php echo $image ?>" class="img-responsive">
         </div>
 
         <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-            <h1>Divine Rapier</h1>
-            <h3>Brand: Siren</h3>
-            <h3>Product ID: xxx</h3>
+            <h1><?php echo $title ?></h1>
+            <h3>Brand: <?php echo $brand ?></h3>
+            <h3>Product ID: <?php echo $pid ?></h3>
 
-            <p>Description: loalaoksdsanwqrsdfsafbk Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-            tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-            quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-            consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-            cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-            proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+            <p>Description: <?php echo $description ?></p>
 
-            <h3>Price: 10000đ</h3>
+            <h3>Price: <?php echo $price ?>đ</h3>
 
             <div class="row text-center" >
                 <div class="col-md-6">
-                    <button type="button" class="btn btn-primary btn-lg ">Mua Ngay</button>
+                    <button type="button" class="btn btn-primary btn-lg product" pid = <?php echo $pid?>>Thêm vào giỏ hàng</button>
                 </div>
 
                 <div class="col-md-6">
-                    <button type="button" class="btn btn-success btn-lg">Thêm vào giỏ hàng</button>
+                    <a href="index.php" class="btn btn-success btn-lg">Trở lại trang chủ</a>
                 </div>
             </div>
         </div>
